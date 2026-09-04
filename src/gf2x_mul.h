@@ -1,8 +1,8 @@
-#ifndef KARATSUBA_H
-#define KARATSUBA_H
+#ifndef GF2X_MUL_H
+#define GF2X_MUL_H
 
 /**
- * @file karatsuba.h
+ * @file gf2x_mul.h
  * @brief Multiplicacao de polinomios com Karatsuba.
  */
 
