@@ -218,28 +218,15 @@ static inline void karat_mul_5(const uint64_t *a, const uint64_t *b, uint64_t *c
 	_mm_store_si128((__m128i *)&c[8], out89);
 }
 
+static inline void mul_base_1(const uint64_t *a, const uint64_t *b, uint64_t *c) {
+	const __m128i va = _mm_set_epi64x(0, (long long)a[0]);
+	const __m128i vb = _mm_set_epi64x(0, (long long)b[0]);
+	const __m128i product = _mm_clmulepi64_si128(va, vb, 0x00);
+	_mm_storeu_si128((__m128i *)(void *)c, product);
+}
+
 static inline int gf2x_mul(uint64_t *a, uint64_t *b, uint64_t *c, size_t n) {
-	if (n < 2) {
-		// O tamanho mínimo para polinomios é 2,
-		// TODO: Implementar o Schoolbook method aqui
-		return 1;
-	}
-
-	if (n == 2) {
-		karat_mul_2(a, b, c);
-		return 0;
-	}
-
-	if (n == 3) {
-		karat_mul_3(a, b, c);
-		return 0;
-	}
-
-	if (n == 5) {
-		karat_mul_5(a, b, c);
-		return 0;
-	}
-
+	// TODO: Implementar a decomposição do polinômio nos sub-casos e fazer a composição do resultado
 	return 1;
 }
 
