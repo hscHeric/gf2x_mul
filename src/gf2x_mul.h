@@ -107,7 +107,6 @@ static inline void karat_mul_5(const uint64_t *a, const uint64_t *b, uint64_t *c
 	__m128i vb0, vb1, vb2;
 	__m128i sa, sb;
 	__m128i va_tmp, vb_tmp;
-	__m128i va_low, vb_low;
 	__m128i r10, r6, r14, r12, r0, r1, r2, r3, r4, r5, r9, r7, r11, r8, r13;
 	__m128i c1, c2, c3, c4, c5, c6, c7;
 
@@ -190,11 +189,11 @@ static inline void karat_mul_5(const uint64_t *a, const uint64_t *b, uint64_t *c
 	// C5 = R11 + R1 + R4 + R12 + R2 + R3
 	c5 = _mm_xor_si128(_mm_xor_si128(r11, r12), _mm_xor_si128(r1, t24));
 
-	// C6 = R3 + R12 + R2 + R4
-	c6 = _mm_xor_si128(r12, _mm_xor_si128(t23, r4));
+	// C6 ← R3 + R13 + R2 + R4
+	c6 = _mm_xor_si128(r13, _mm_xor_si128(t23, r4));
 
-	// C7 = R13 + R3 + R4
-	c7 = _mm_xor_si128(r13, t34);
+	// C7 = R14 + R3 + R4
+	c7 = _mm_xor_si128(r14, t34);
 
 	// C8 = R4
 
@@ -219,7 +218,7 @@ static inline void karat_mul_5(const uint64_t *a, const uint64_t *b, uint64_t *c
 	_mm_store_si128((__m128i *)&c[8], out89);
 }
 
-inline int gf2x_mul(uint64_t *a, uint64_t *b, uint64_t *c, size_t n) {
+static inline int gf2x_mul(uint64_t *a, uint64_t *b, uint64_t *c, size_t n) {
 	if (n < 2) {
 		// O tamanho mínimo para polinomios é 2,
 		// TODO: Implementar o Schoolbook method aqui

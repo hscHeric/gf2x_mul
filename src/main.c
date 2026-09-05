@@ -9,6 +9,7 @@
 // Macro para alinhar vetores em endereços multiplos de 128 para uso correto das instruções de load
 // das multiplicações de polinómios.h
 #define ALIGN_128 __attribute__((aligned(16)))
+
 // #define N (1ULL << 15) // 2^15
 
 #define N 5
@@ -26,6 +27,8 @@ int main(void) {
 	if (err != 0) {
 		printf("Ocorreu um erro!");
 	}
+
+	gf2x_print("C", c, N * 2);
 
 	return 0;
 }
