@@ -163,7 +163,7 @@ static inline void karat_mul_5(const uint64_t *a, const uint64_t *b, uint64_t *c
 	sb = _mm_xor_si128(vb1, vb_tmp);          // [B3, B2 + B4]
 	r13 = _mm_clmulepi64_si128(sa, sb, 0x00); // (A2 + A4) * (B2 + B4)
 
-	// Reaproveitamento das somas.
+	// Reaproveitamento das somas. A soma écomultatia (A + B) + C = A + (B + C)
 	__m128i t01 = _mm_xor_si128(r0, r1);
 	__m128i t23 = _mm_xor_si128(r2, r3);
 	__m128i t24 = _mm_xor_si128(r2, r4);
@@ -219,17 +219,29 @@ static inline void karat_mul_5(const uint64_t *a, const uint64_t *b, uint64_t *c
 	_mm_store_si128((__m128i *)&c[8], out89);
 }
 
-/**
- * @brief Multiplica dois polinomios, usando um workspace reutilizado pela recursao.
- * @return Um em caso de sucesso; zero se o tamanho for invalido ou faltar memoria.
- */
-static inline int karat_mul(const uint64_t *a, const uint64_t *b, uint64_t *c, size_t n) {
-	(void)a;
-	(void)b;
-	(void)c;
-	(void)n;
+inline int gf2x_mul(uint64_t *a, uint64_t *b, uint64_t *c, size_t n) {
+	if (n < 2) {
+		// O tamanho mínimo para polinomios é 2,
+		// TODO: Implementar o Schoolbook method aqui
+		return 1;
+	}
 
-	return -1;
+	if (n == 2) {
+		karat_mul_2(a, b, c);
+		return 0;
+	}
+
+	if (n == 3) {
+		karat_mul_3(a, b, c);
+		return 0;
+	}
+
+	if (n == 5) {
+		karat_mul_5(a, b, c);
+		return 0;
+	}
+
+	return 1;
 }
 
 #endif
